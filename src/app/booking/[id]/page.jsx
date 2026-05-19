@@ -1,15 +1,27 @@
+
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Image from "next/image";
 import React from "react";
 
-const fetchDetails = async (id) => {
-  const res = await fetch(`http://localhost:8000/booking/${id}`);
+const fetchDetails = async (id,token) => {
+  const res = await fetch(`http://localhost:8000/booking/${id}`,{
+    headers:{
+      authorization: `Bearer ${token}` || ""
+    }
+  });
   const data = await res.json();
   return data;
 };
 
 const BookDetails = async ({ params }) => {
-  const { id } =await params;
-  const book = await fetchDetails(id);
+  const { id } = await params;
+  const {token} = await auth.api.getToken({
+    headers:await headers()
+  })
+
+
+  const book = await fetchDetails(id,token);
   const {
     roomImage,
     roomName,
@@ -35,18 +47,29 @@ const BookDetails = async ({ params }) => {
             className="object-cover w-full h-full"
           />
           <div className="p-8">
-            <h1 className="text-3xl font-bold text-slate-900">{roomName || "Study Room"}</h1>
+            <h1 className="text-3xl font-bold text-slate-900">
+              {roomName || "Study Room"}
+            </h1>
             <p className="mt-4 text-slate-600">
-              {specialNote || "A premium study room designed for calm concentration and easy booking."}
+              {specialNote ||
+                "A premium study room designed for calm concentration and easy booking."}
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-3xl bg-slate-50 p-6">
-                <p className="text-sm uppercase tracking-[0.2em] text-slate-500">Room ID</p>
-                <p className="mt-3 text-xl font-semibold text-slate-900">{roomId || "N/A"}</p>
+                <p className="text-sm uppercase tracking-[0.2em] text-slate-500">
+                  Room ID
+                </p>
+                <p className="mt-3 text-xl font-semibold text-slate-900">
+                  {roomId || "N/A"}
+                </p>
               </div>
               <div className="rounded-3xl bg-slate-50 p-6">
-                <p className="text-sm uppercase tracking-[0.2em] text-slate-500">Duration</p>
-                <p className="mt-3 text-xl font-semibold text-slate-900">{durationHour ? `${durationHour} hr` : "N/A"}</p>
+                <p className="text-sm uppercase tracking-[0.2em] text-slate-500">
+                  Duration
+                </p>
+                <p className="mt-3 text-xl font-semibold text-slate-900">
+                  {durationHour ? `${durationHour} hr` : "N/A"}
+                </p>
               </div>
             </div>
           </div>
@@ -57,12 +80,20 @@ const BookDetails = async ({ params }) => {
             <h2 className="text-2xl font-semibold text-slate-900">Pricing</h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div className="rounded-3xl bg-slate-50 p-6">
-                <p className="text-sm uppercase tracking-[0.2em] text-slate-500">Price / hour</p>
-                <p className="mt-3 text-3xl font-bold text-slate-900">{pricePerHour ? `$${pricePerHour}` : "N/A"}</p>
+                <p className="text-sm uppercase tracking-[0.2em] text-slate-500">
+                  Price / hour
+                </p>
+                <p className="mt-3 text-3xl font-bold text-slate-900">
+                  {pricePerHour ? `$${pricePerHour}` : "N/A"}
+                </p>
               </div>
               <div className="rounded-3xl bg-gradient-to-br from-purple-600 to-fuchsia-500 p-6 text-white">
-                <p className="text-sm uppercase tracking-[0.2em] text-purple-100/80">Total cost</p>
-                <p className="mt-3 text-4xl font-black">{totalCost ? `$${totalCost}` : "N/A"}</p>
+                <p className="text-sm uppercase tracking-[0.2em] text-purple-100/80">
+                  Total cost
+                </p>
+                <p className="mt-3 text-4xl font-black">
+                  {totalCost ? `$${totalCost}` : "N/A"}
+                </p>
               </div>
             </div>
           </div>
@@ -81,7 +112,9 @@ const BookDetails = async ({ params }) => {
                 ))}
               </ul>
             ) : (
-              <p className="mt-4 text-slate-500">No amenities listed for this room.</p>
+              <p className="mt-4 text-slate-500">
+                No amenities listed for this room.
+              </p>
             )}
           </div>
         </div>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const HomeCard = ({ nook }) => {
@@ -15,7 +16,7 @@ const HomeCard = ({ nook }) => {
 
       <div className="flex flex-wrap gap-2 mt-2">
         
-        <h2>{nook.roomName}</h2>
+        <Link href={`/booking/${nook._id}`}>{nook.roomName}</Link>
       </div>
     </div>
   );
