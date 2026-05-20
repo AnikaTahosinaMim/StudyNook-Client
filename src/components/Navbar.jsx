@@ -66,7 +66,7 @@ const Navbar = () => {
                 <Button aria-label="Menu" variant="secondary">
                   <Image
                     src={
-                      session?.user?.image || ""
+                      session?.user?.image || "/home.jpg"
                     }
                     width={40}
                     height={40}

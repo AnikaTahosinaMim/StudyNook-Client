@@ -46,7 +46,7 @@ const BookCard = ({ nook }) => {
                 {roomName}
               </h3>
             </Link>
-               <span className="text-center flex mt-2 items-center">
+            <span className="text-center flex mt-2 items-center">
               <FaStar className="text-purple-500 text-center"></FaStar>
               <FaStar className="text-purple-500 text-center"></FaStar>
               <FaStar className="text-purple-500 text-center"></FaStar>
@@ -65,7 +65,6 @@ const BookCard = ({ nook }) => {
             <span className="text-2xl font-black text-blue-600">
               ${totalCost}
             </span>
-         
 
             <Button
               variant="flat"
