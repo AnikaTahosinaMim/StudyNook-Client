@@ -19,11 +19,7 @@ const formatTime = (date) => {
   return `${hours}:${minutes}`;
 };
 
-export default function BookingModal({
-  price = 0,
-  book,
-  session,
-}) {
+export default function BookingModal({ price = 0, book, session }) {
   const now = new Date();
   const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
 
@@ -56,31 +52,30 @@ export default function BookingModal({
     return Number((price * durationHours).toFixed(2));
   }, [price, durationHours]);
 
-  const handleConfirmBooking = async () => {
-    if (!bookingDate || !startTime || !endTime) {
-      toast.error("Please fill in all fields.");
-      return;
-    }
+ const handleConfirmBooking = async () => {
+  if (!bookingDate || !startTime || !endTime) {
+    toast.error("Please fill in all fields.");
+    return;
+  }
 
-    if (durationHours <= 0) {
-      toast.error("End time must be later than start time.");
-      return;
-    }
+  if (durationHours <= 0) {
+    toast.error("End time must be later than start time.");
+    return;
+  }
 
-    const bookingInfo = {
-      roomId: book?._id,
-      roomName: book?.roomName,
-      roomImage: book?.roomImage,
-      bookingDate,
-      startTime,
-      endTime,
-      durationHours,
-      totalCost,
-    //   userEmail: session?.user?.email,
-    //   userName: session?.user?.name,
-      createdAt: new Date(),
-    };
+  const bookingInfo = {
+    roomId: book?._id,
+    roomName: book?.roomName,
+    roomImage: book?.roomImage,
+    bookingDate,
+    startTime,
+    endTime,
+    durationHours,
+    totalCost,
+    createdAt: new Date(),
+  };
 
+  try {
     const res = await fetch("http://localhost:8000/my-bookings", {
       method: "POST",
       headers: {
@@ -91,11 +86,22 @@ export default function BookingModal({
 
     const data = await res.json();
 
+    // ❌ backend error handle
+    if (!res.ok) {
+      toast.error(data.message || "Booking failed");
+      return;
+    }
+
+    // ✅ success
     if (data.insertedId) {
       toast.success("Booking Confirmed Successfully! 🎉");
       setOpen(false);
     }
-  };
+  } catch (error) {
+    toast.error("Something went wrong!");
+    console.log(error);
+  }
+};
 
   const today = formatDate(new Date());
 

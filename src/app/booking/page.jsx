@@ -1,18 +1,67 @@
 import BookCard from "@/components/BookCard";
-import React from "react";
 
-const BookingPages = async () => {
-  const res = await fetch("http://localhost:8000/booking");
+const BookingPages = async ({ searchParams }) => {
+  const params = await searchParams;
+
+  const search = params?.search || "";
+  const amenities = params?.amenities || "";
+
+  const query = new URLSearchParams();
+
+  if (search) {
+    query.append("search", search);
+  }
+
+  if (amenities) {
+    query.append("amenities", amenities);
+  }
+
+  const res = await fetch(`http://localhost:8000/booking?${query.toString()}`, {
+    cache: "no-store",
+  });
+
   const nooks = await res.json();
-  console.log(nooks);
-  
 
   return (
-    <div>
-      <h2>Booking</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div className="container mx-auto px-4 py-10">
+      <h2 className="text-3xl font-bold mb-6">Study Rooms</h2>
+
+      <form
+        action="/booking"
+        method="GET"
+        className="mb-8 flex flex-col md:flex-row gap-4"
+      >
+        <input
+          type="text"
+          name="search"
+          defaultValue={search}
+          placeholder="Search room..."
+          className="border px-4 py-3 rounded-xl"
+        />
+
+        <select
+          name="amenities"
+          defaultValue={amenities}
+          className="border px-4 py-3 rounded-xl"
+        >
+          <option value="">All Amenities</option>
+          <option value="WiFi">WiFi</option>
+          <option value="AC">AC</option>
+          <option value="Whiteboard">Whiteboard</option>
+          <option value="Projector">Projector</option>
+        </select>
+
+        <button
+          type="submit"
+          className="bg-purple-600 text-white px-6 py-3 rounded-xl"
+        >
+          Search
+        </button>
+      </form>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {nooks.map((nook) => (
-          <BookCard key={nook._id} nook={nook}></BookCard>
+          <BookCard key={nook._id} nook={nook} />
         ))}
       </div>
     </div>
