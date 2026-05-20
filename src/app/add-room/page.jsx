@@ -1,8 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useSession } from "@/lib/auth-client";
 
 const AddRooms = () => {
+  const router = useRouter();
+  const { data: session, isPending } = useSession();
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -32,13 +37,22 @@ const AddRooms = () => {
   const handleSUbmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    const formElement = e.currentTarget;
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(formElement);
     const roomData = Object.fromEntries(formData.entries());
     const amenities = formData.getAll("amenities");
     if (amenities.length) {
       roomData.amenities = amenities;
     }
+
+    if (!session?.user?.email) {
+      toast.error("Login required to add a room");
+      return;
+    }
+
+    roomData.ownerEmail = session.user.email;
+    roomData.ownerName = session.user.name || "";
 
     try {
       const res = await fetch("http://localhost:8000/room", {
@@ -53,10 +67,12 @@ const AddRooms = () => {
         throw new Error("Failed to add room");
       }
 
-      e.currentTarget.reset();
-      setMessage("Room added successfully");
+      formElement.reset();
+      toast.success("Room added successfully");
       await fetchRooms();
+      router.push("/my-listings");
     } catch (error) {
+      toast.error(error.message || "Unable to submit room");
       setMessage(error.message || "Unable to submit room");
     }
   };

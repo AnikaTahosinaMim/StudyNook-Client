@@ -31,7 +31,7 @@ const HomeImage = () => {
         </p>
 
         <Link
-          href="/rooms"
+          href="/booking"
           className="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full font-medium transition"
         >
           Explore Rooms
