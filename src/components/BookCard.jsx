@@ -26,7 +26,7 @@ const BookCard = ({ nook }) => {
       : [];
 
   return (
-    <div className="group w-full max-w-sm mx-auto bg-white rounded-3xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-slate-100">
+    <div className="group w-full max-w-sm mx-auto bg-white p-3 shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-slate-100">
       <div className="relative h-52 overflow-hidden">
         <Image
           alt="Room Image"

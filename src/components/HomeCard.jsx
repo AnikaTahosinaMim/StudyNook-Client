@@ -5,7 +5,7 @@ import { MapPin, Star } from "lucide-react";
 
 const HomeCard = ({ nook }) => {
   return (
-    <div className="group my-8 relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100">
+    <div className="group my-8 relative overflow-hidden p-3 bg-white shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100">
 
       {/* Image */}
       <div className="relative h-56 w-full overflow-hidden">
