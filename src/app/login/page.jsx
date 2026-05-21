@@ -10,29 +10,60 @@ import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
-
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 export default function Login() {
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const router = useRouter();
+
   const handleLogin = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.currentTarget);
     const loginPages = Object.fromEntries(formData.entries());
-    console.log(loginPages);
-    const { data, error } = await authClient.signIn.email({
-      ...loginPages,
-    });
-    if (data) {
-      toast.success("Successfully login");
-    }
-    if (error) {
-      toast.error(error.message);
+
+    const passwordValue = loginPages.password;
+
+    setPasswordError("");
+
+    if (!passwordValue || passwordValue.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
       return;
     }
-    // redirect("/");
+
+    if (!/[A-Z]/.test(passwordValue)) {
+      setPasswordError("Password must contain at least one uppercase letter");
+      return;
+    }
+
+    if (!/[a-z]/.test(passwordValue)) {
+      setPasswordError("Password must contain at least one lowercase letter");
+      return;
+    }
+
+    try {
+      const { data, error } = await authClient.signIn.email({
+        ...loginPages,
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (data) {
+        toast.success("Successfully login");
+        router.push("/");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
   };
   const handleGoogle = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
-      // callbackURL: "/",
+      callbackURL: "/",
     });
     // const { data: tokenData, error } = await authClient.token();
     // console.log(tokenData,"tokens");
@@ -94,15 +125,19 @@ export default function Login() {
                 >
                   Password
                 </label>
-                <Input
-                  id="password"
-                  required
-                  placeholder="••••••••"
+                <input
                   type="password"
                   name="password"
-                  startContent={<Lock className="w-5 h-5 text-slate-400" />}
-                  className="border-2 border-slate-200 hover:border-blue-600/50 focus-within:border-blue-600 transition-all duration-300 h-14 bg-white w-full rounded-2xl"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border p-2 rounded"
                 />
+
+                {/* Inline Error Message */}
+                {passwordError && (
+                  <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+                )}
               </div>
 
               <Button

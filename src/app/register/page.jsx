@@ -12,27 +12,47 @@ export default function Register() {
   const router = useRouter();
   const handleRegister = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.currentTarget);
     const registerPages = Object.fromEntries(formData.entries());
-    console.log(registerPages);
+
+    const passwordValue = registerPages.password;
+
+    if (!passwordValue || passwordValue.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    if (!/[A-Z]/.test(passwordValue)) {
+      toast.error("Password must contain at least one uppercase letter");
+      return;
+    }
+
+    if (!/[a-z]/.test(passwordValue)) {
+      toast.error("Password must contain at least one lowercase letter");
+      return;
+    }
+
     const { data, error } = await authClient.signUp.email({
       ...registerPages,
     });
+
     if (data) {
-      toast.success("Found data");
+      toast.success("Successfully register");
+      router.push("/login");
     }
+
     if (error) {
       toast.error(error.message);
       return;
     }
-    router.push("/");
   };
   const handleGoogle = async () => {
-      const data = await authClient.signIn.social({
-        provider: "google",
-        callbackURL: "/",
-      });
-    };
+    const data = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+  };
   return (
     <div className="min-h-[80vh] flex flex-col bg-slate-50 py-12">
       <div className="grow flex items-center justify-center p-4">
@@ -133,7 +153,10 @@ export default function Register() {
                   Sign in
                 </Link>
               </p>
-              <Button onClick={handleGoogle} className={"bg-purple-500 w-full font-bold"}>
+              <Button
+                onClick={handleGoogle}
+                className={"bg-purple-500 w-full font-bold"}
+              >
                 Continue with google
               </Button>
             </div>
