@@ -3,7 +3,6 @@
 import { toast } from "react-toastify";
 
 export default function MyBookingsClient({ bookings }) {
-  // Empty State
   if (!bookings || bookings.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -17,7 +16,6 @@ export default function MyBookingsClient({ bookings }) {
     );
   }
 
-  // Cancel Booking
   const handleCancel = async (id) => {
     const confirmDelete = confirm(
       "Are you sure you want to cancel this booking?"
@@ -36,12 +34,9 @@ export default function MyBookingsClient({ bookings }) {
     }
   };
 
-  // Check if booking date is today or in the future
   const canCancelBooking = (bookingDate, status) => {
-    // Backend-এ status না থাকলে default "confirmed"
     const currentStatus = status || "confirmed";
 
-    // confirmed না হলে Cancel button দেখাবে না
     if (currentStatus !== "confirmed") return false;
 
     const today = new Date();
@@ -50,7 +45,6 @@ export default function MyBookingsClient({ bookings }) {
     const booking = new Date(bookingDate);
     booking.setHours(0, 0, 0, 0);
 
-    // আজকের তারিখ বা ভবিষ্যতের তারিখ হলে Cancel button দেখাবে
     return booking >= today;
   };
 
@@ -99,7 +93,6 @@ export default function MyBookingsClient({ bookings }) {
                   </div>
                 </td>
 
-                {/* Cancel Button */}
                 <td className="p-3">
                   {canCancelBooking(
                     booking.bookingDate,

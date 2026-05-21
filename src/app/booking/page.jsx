@@ -1,24 +1,30 @@
 import BookCard from "@/components/BookCard";
 
 const BookingPages = async ({ searchParams }) => {
+
   const params = await searchParams;
 
   const search = params?.search || "";
   const amenities = params?.amenities || "";
+  const startTime = params?.startTime || "";
+  const endTime = params?.endTime || "";
 
   const query = new URLSearchParams();
 
-  if (search) {
-    query.append("search", search);
-  }
+  if (search) query.append("search", search);
 
-  if (amenities) {
-    query.append("amenities", amenities);
-  }
+  if (amenities) query.append("amenities", amenities);
 
-  const res = await fetch(`http://localhost:8000/booking?${query.toString()}`, {
-    cache: "no-store",
-  });
+  if (startTime) query.append("startTime", startTime);
+
+  if (endTime) query.append("endTime", endTime);
+
+  const res = await fetch(
+    `http://localhost:8000/booking?${query.toString()}`,
+    {
+      cache: "no-store",
+    }
+  );
 
   const nooks = await res.json();
 
@@ -32,10 +38,9 @@ const BookingPages = async ({ searchParams }) => {
         className="mb-8 flex flex-col md:flex-row gap-4"
       >
         <input
-          type="text"
           name="search"
           defaultValue={search}
-          placeholder="Search room..."
+          placeholder="Search room"
           className="border px-4 py-3 rounded-xl"
         />
 
@@ -47,14 +52,23 @@ const BookingPages = async ({ searchParams }) => {
           <option value="">All Amenities</option>
           <option value="WiFi">WiFi</option>
           <option value="AC">AC</option>
-          <option value="Whiteboard">Whiteboard</option>
-          <option value="Projector">Projector</option>
         </select>
 
-        <button
-          type="submit"
-          className="bg-purple-600 text-white px-6 py-3 rounded-xl"
-        >
+        <input
+          type="time"
+          name="startTime"
+          defaultValue={startTime}
+          className="border px-4 py-3 rounded-xl"
+        />
+
+        <input
+          type="time"
+          name="endTime"
+          defaultValue={endTime}
+          className="border px-4 py-3 rounded-xl"
+        />
+
+        <button className="bg-purple-600 text-white px-6 py-3 rounded-xl">
           Search
         </button>
       </form>
