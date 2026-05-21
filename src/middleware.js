@@ -11,5 +11,10 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/booking/:path*"],
+  matcher: [
+    "/booking/:path*",
+    "/my-listings/:path*",
+    "/my-bookings/:path*",
+    "/add-room/:path*",
+  ],
 };
