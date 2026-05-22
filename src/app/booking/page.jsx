@@ -1,7 +1,6 @@
 import BookCard from "@/components/BookCard";
 
 const BookingPages = async ({ searchParams }) => {
-
   const params = await searchParams;
 
   const search = params?.search || "";
@@ -23,7 +22,7 @@ const BookingPages = async ({ searchParams }) => {
     `${process.env.NEXT_PUBLIC_SERVER_URL}/booking?${query.toString()}`,
     {
       cache: "no-store",
-    }
+    },
   );
 
   const nooks = await res.json();
@@ -73,11 +72,22 @@ const BookingPages = async ({ searchParams }) => {
         </button>
       </form>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {nooks.map((nook) => (
-          <BookCard key={nook._id} nook={nook} />
-        ))}
-      </div>
+      {nooks.length === 0 ? (
+        <div className="text-center py-20">
+          <h2 className="text-2xl font-bold text-purple-600">
+            No rooms found 😢
+          </h2>
+          <p className="text-gray-500 mt-2">
+            Try adjusting your search or filters
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {nooks.map((nook) => (
+            <BookCard key={nook._id} nook={nook} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
