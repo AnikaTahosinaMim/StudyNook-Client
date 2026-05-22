@@ -3,6 +3,9 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Image from "next/image";
 import React from "react";
+export const metadata = {
+  title: "Room details | Study Nook",
+};
 
 const fetchDetails = async (id, token) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${id}`, {

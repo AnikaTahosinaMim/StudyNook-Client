@@ -7,6 +7,9 @@ import { User, Mail, Lock, ArrowRight } from "lucide-react";
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+// export const metadata = {
+//   title: "Login | Study Nook",
+// };
 
 export default function Register() {
   const router = useRouter();

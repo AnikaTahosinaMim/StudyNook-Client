@@ -1,12 +1,17 @@
 import BookCard from "@/components/BookCard";
+export const metadata = {
+  title: "All rooms | Study Nook",
+};
 
 const BookingPages = async ({ searchParams }) => {
   const params = await searchParams;
 
   const search = params?.search || "";
   const amenities = params?.amenities || "";
-  const startTime = params?.startTime || "";
-  const endTime = params?.endTime || "";
+  const minPrice = params?.minPrice || "";
+  const maxPrice = params?.maxPrice || "";
+  // scrach by name and time and category
+  
 
   const query = new URLSearchParams();
 
@@ -14,9 +19,8 @@ const BookingPages = async ({ searchParams }) => {
 
   if (amenities) query.append("amenities", amenities);
 
-  if (startTime) query.append("startTime", startTime);
-
-  if (endTime) query.append("endTime", endTime);
+  if (minPrice) query.append("minPrice", minPrice);
+  if (maxPrice) query.append("maxPrice", maxPrice);
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/booking?${query.toString()}`,
@@ -25,7 +29,8 @@ const BookingPages = async ({ searchParams }) => {
     },
   );
 
-  const nooks = await res.json();
+  const data = await res.json();
+  const nooks = Array.isArray(data) ? data : [];
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -54,16 +59,18 @@ const BookingPages = async ({ searchParams }) => {
         </select>
 
         <input
-          type="time"
-          name="startTime"
-          defaultValue={startTime}
+          type="number"
+          name="minPrice"
+          defaultValue={params?.minPrice || ""}
+          placeholder="Min Price"
           className="border px-4 py-3 rounded-xl"
         />
 
         <input
-          type="time"
-          name="endTime"
-          defaultValue={endTime}
+          type="number"
+          name="maxPrice"
+          defaultValue={params?.maxPrice || ""}
+          placeholder="Max Price"
           className="border px-4 py-3 rounded-xl"
         />
 

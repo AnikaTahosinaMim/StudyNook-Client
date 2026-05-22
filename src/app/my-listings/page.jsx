@@ -2,6 +2,12 @@ import React from "react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import MyListingsManager from "@/components/MyListingsManager";
+export const metadata = {
+  title: "My Listings | Study Nook",
+  description:
+    "Check your booked study rooms, manage reservations, and cancel bookings easily in Study Nook.",
+  keywords: ["study room booking", "my bookings", "room management"],
+};
 
 const MyListing = async () => {
   const session = await auth.api.getSession({

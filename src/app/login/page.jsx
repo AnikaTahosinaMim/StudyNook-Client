@@ -12,6 +12,9 @@ import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+// export const metadata = {
+//   title: "Login | Study Nook",
+// };
 export default function Login() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -54,7 +57,8 @@ export default function Login() {
 
       if (data) {
         toast.success("Successfully login");
-        router.push("/");
+        // router.push("/");
+        window.location.reload()
       }
     } catch (err) {
       toast.error("Something went wrong");
