@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FaDashcube } from "react-icons/fa6";
 import { toast } from "react-toastify";
 
 export default function MyBookingsClient({ bookings }) {
@@ -23,13 +24,17 @@ export default function MyBookingsClient({ bookings }) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/my-bookings/${id}`,
       {
-        method: "DELETE",
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "cancelled" }),
       },
     );
 
     const data = await res.json();
 
-    if (data.deletedCount > 0) {
+    if (data.modifiedCount > 0) {
       toast.success("Booking cancelled successfully!");
       window.location.reload();
     } else {
@@ -109,7 +114,7 @@ export default function MyBookingsClient({ bookings }) {
                     </button>
                   ) : (
                     <span className="text-slate-400 text-sm">
-                      Not Available
+                      <FaDashcube></FaDashcube>
                     </span>
                   )}
                 </td>
