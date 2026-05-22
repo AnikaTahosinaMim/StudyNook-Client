@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function MyBookingsClient({ bookings }) {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   if (!bookings || bookings.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -17,20 +20,20 @@ export default function MyBookingsClient({ bookings }) {
   }
 
   const handleCancel = async (id) => {
-    const confirmDelete = confirm(
-      "Are you sure you want to cancel this booking?"
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/my-bookings/${id}`,
+      {
+        method: "DELETE",
+      },
     );
-    if (!confirmDelete) return;
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/my-bookings/${id}`, {
-      method: "DELETE",
-    });
 
     const data = await res.json();
 
     if (data.deletedCount > 0) {
       toast.success("Booking cancelled successfully!");
       window.location.reload();
+    } else {
+      toast.error("Failed to cancel booking");
     }
   };
 
@@ -94,12 +97,12 @@ export default function MyBookingsClient({ bookings }) {
                 </td>
 
                 <td className="p-3">
-                  {canCancelBooking(
-                    booking.bookingDate,
-                    booking.status
-                  ) ? (
+                  {canCancelBooking(booking.bookingDate, booking.status) ? (
                     <button
-                      onClick={() => handleCancel(booking._id)}
+                      onClick={() => {
+                        setSelectedId(booking._id);
+                        setShowModal(true);
+                      }}
                       className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
                     >
                       Cancel
@@ -114,6 +117,35 @@ export default function MyBookingsClient({ bookings }) {
             ))}
           </tbody>
         </table>
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[300px] text-center">
+              <h2 className="text-lg font-bold mb-3">Confirm Cancellation</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Are you sure you want to cancel this booking?
+              </p>
+
+              <div className="flex justify-center gap-3">
+                <button
+                  onClick={() => {
+                    handleCancel(selectedId);
+                    setShowModal(false);
+                  }}
+                  className="bg-red-500 text-white px-4 py-1 rounded"
+                >
+                  Yes
+                </button>
+
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="bg-gray-300 px-4 py-1 rounded"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
