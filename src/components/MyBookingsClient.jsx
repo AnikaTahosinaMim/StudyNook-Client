@@ -22,7 +22,7 @@ export default function MyBookingsClient({ bookings }) {
     );
     if (!confirmDelete) return;
 
-    const res = await fetch(`http://localhost:8000/my-bookings/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/my-bookings/${id}`, {
       method: "DELETE",
     });
 

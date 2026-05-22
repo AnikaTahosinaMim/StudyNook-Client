@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 
 const fetchDetails = async (id, token) => {
-  const res = await fetch(`http://localhost:8000/booking/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${id}`, {
     headers: {
       authorization: `Bearer ${token}` || "",
     },

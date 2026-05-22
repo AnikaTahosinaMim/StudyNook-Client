@@ -6,7 +6,6 @@ const HomeImage = () => {
   return (
     <div className="relative w-full h-[500px] md:h-[650px] overflow-hidden">
 
-      {/* Background Image */}
       <Image
         src="/home.jpg"
         alt="study room"
@@ -15,10 +14,8 @@ const HomeImage = () => {
         priority
       />
 
-      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/50"></div>
 
-      {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
 
         <h1 className="text-white text-3xl md:text-5xl font-bold">

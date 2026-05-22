@@ -1,15 +1,15 @@
-import React from 'react';
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
-import MyListingsManager from '@/components/MyListingsManager';
+import React from "react";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import MyListingsManager from "@/components/MyListingsManager";
 
 const MyListing = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  const res = await fetch('http://localhost:8000/room', {
-    cache: 'no-store',
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room`, {
+    cache: "no-store",
   });
   const rooms = await res.json();
   const myRooms = Array.isArray(rooms)
@@ -22,7 +22,9 @@ const MyListing = async () => {
       {session?.user?.email ? (
         <MyListingsManager rooms={myRooms} />
       ) : (
-        <p className="text-center text-slate-600">Please log in to view your listings.</p>
+        <p className="text-center text-slate-600">
+          Please log in to view your listings.
+        </p>
       )}
     </div>
   );

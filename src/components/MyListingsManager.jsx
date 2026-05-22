@@ -74,23 +74,29 @@ const MyListingsManager = ({ rooms }) => {
 
     try {
       console.debug("Updating room", selectedRoom._id, payload);
-      let response = await fetch(`http://localhost:8000/room/${selectedRoom._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.status === 404) {
-        console.warn("PUT returned 404, retrying with PATCH");
-        response = await fetch(`http://localhost:8000/room/${selectedRoom._id}`, {
-          method: "PATCH",
+      let response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/room/${selectedRoom._id}`,
+        {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        });
+        },
+      );
+
+      if (response.status === 404) {
+        console.warn("PUT returned 404, retrying with PATCH");
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/room/${selectedRoom._id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          },
+        );
       }
 
       if (!response.ok) {
@@ -107,7 +113,9 @@ const MyListingsManager = ({ rooms }) => {
 
       const updatedRoom = await response.json();
       setListings((current) =>
-        current.map((room) => (room._id === updatedRoom._id ? updatedRoom : room))
+        current.map((room) =>
+          room._id === updatedRoom._id ? updatedRoom : room,
+        ),
       );
       setStatusMessage("Listing updated successfully.");
       setTimeout(closeModals, 1000);
@@ -127,9 +135,12 @@ const MyListingsManager = ({ rooms }) => {
 
     try {
       console.debug("Deleting room", activeRoom._id);
-      const response = await fetch(`http://localhost:8000/room/${activeRoom._id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/room/${activeRoom._id}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (!response.ok) {
         const text = await response.text();
@@ -143,7 +154,9 @@ const MyListingsManager = ({ rooms }) => {
         return;
       }
 
-      setListings((current) => current.filter((room) => room._id !== activeRoom._id));
+      setListings((current) =>
+        current.filter((room) => room._id !== activeRoom._id),
+      );
       setStatusMessage("Listing deleted successfully.");
       setTimeout(closeModals, 400);
     } catch (error) {
@@ -159,7 +172,10 @@ const MyListingsManager = ({ rooms }) => {
       {listings.length ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {listings.map((room) => (
-            <div key={room._id || room.roomName} className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl transition-shadow hover:shadow-2xl">
+            <div
+              key={room._id || room.roomName}
+              className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl transition-shadow hover:shadow-2xl"
+            >
               <div className="relative h-56 w-full overflow-hidden rounded-t-3xl bg-slate-100">
                 <Image
                   src={room.roomImage}
@@ -171,18 +187,27 @@ const MyListingsManager = ({ rooms }) => {
               </div>
 
               <div className="p-5">
-                <h3 className="text-xl font-semibold text-slate-900">{room.roomName || "Untitled room"}</h3>
+                <h3 className="text-xl font-semibold text-slate-900">
+                  {room.roomName || "Untitled room"}
+                </h3>
                 <p className="mt-3 text-sm text-slate-600 line-clamp-2">
                   {room.specialNote || "No description provided."}
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2 text-sm text-slate-500">
-                  {room.pricePerHour ? <span>Price: ${room.pricePerHour}/hr</span> : null}
-                  {room.durationHour ? <span>Booked for {room.durationHour} hr</span> : null}
+                  {room.pricePerHour ? (
+                    <span>Price: ${room.pricePerHour}/hr</span>
+                  ) : null}
+                  {room.durationHour ? (
+                    <span>Booked for {room.durationHour} hr</span>
+                  ) : null}
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <Link href={`/booking/${room._id}`} className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-100">
+                  <Link
+                    href={`/booking/${room._id}`}
+                    className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-100"
+                  >
                     View
                   </Link>
                   <button
@@ -206,8 +231,12 @@ const MyListingsManager = ({ rooms }) => {
         </div>
       ) : (
         <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center shadow-xl">
-          <p className="text-lg font-medium text-slate-700">You have not added any listings yet.</p>
-          <p className="mt-3 text-sm text-slate-500">Add rooms first, then edit or remove them from this page.</p>
+          <p className="text-lg font-medium text-slate-700">
+            You have not added any listings yet.
+          </p>
+          <p className="mt-3 text-sm text-slate-500">
+            Add rooms first, then edit or remove them from this page.
+          </p>
         </div>
       )}
 
@@ -216,8 +245,12 @@ const MyListingsManager = ({ rooms }) => {
           <div className="w-full max-w-2xl overflow-hidden rounded-[2rem] bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-semibold text-slate-900">Edit Listing</h2>
-                <p className="mt-1 text-sm text-slate-500">Update the room details and save your changes.</p>
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  Edit Listing
+                </h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  Update the room details and save your changes.
+                </p>
               </div>
               <button
                 type="button"
@@ -230,7 +263,9 @@ const MyListingsManager = ({ rooms }) => {
 
             <form onSubmit={handleEditSubmit} className="mt-6 space-y-5">
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Room name</label>
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Room name
+                </label>
                 <input
                   name="roomName"
                   value={editForm.roomName}
@@ -240,7 +275,9 @@ const MyListingsManager = ({ rooms }) => {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Image URL</label>
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Image URL
+                </label>
                 <input
                   name="roomImage"
                   value={editForm.roomImage}
@@ -251,7 +288,9 @@ const MyListingsManager = ({ rooms }) => {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">Price per hour</label>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Price per hour
+                  </label>
                   <input
                     name="pricePerHour"
                     value={editForm.pricePerHour}
@@ -260,7 +299,9 @@ const MyListingsManager = ({ rooms }) => {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">Amenities</label>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Amenities
+                  </label>
                   <input
                     name="amenities"
                     value={editForm.amenities}
@@ -272,7 +313,9 @@ const MyListingsManager = ({ rooms }) => {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Special note</label>
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Special note
+                </label>
                 <textarea
                   name="specialNote"
                   value={editForm.specialNote}
@@ -310,11 +353,17 @@ const MyListingsManager = ({ rooms }) => {
       {isDeleteOpen && activeRoom ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-lg rounded-[2rem] bg-white p-6 shadow-2xl">
-            <h2 className="text-2xl font-semibold text-slate-900">Delete listing</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Delete listing
+            </h2>
             <p className="mt-3 text-sm text-slate-600">
-              Are you sure you want to delete <strong>{activeRoom.roomName}</strong>? This action cannot be undone.
+              Are you sure you want to delete{" "}
+              <strong>{activeRoom.roomName}</strong>? This action cannot be
+              undone.
             </p>
-            {statusMessage ? <p className="mt-3 text-sm text-red-600">{statusMessage}</p> : null}
+            {statusMessage ? (
+              <p className="mt-3 text-sm text-red-600">{statusMessage}</p>
+            ) : null}
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"

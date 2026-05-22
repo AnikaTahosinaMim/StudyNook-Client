@@ -76,7 +76,7 @@ export default function BookingModal({ price = 0, book, session }) {
   };
 
   try {
-    const res = await fetch("http://localhost:8000/my-bookings", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/my-bookings`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

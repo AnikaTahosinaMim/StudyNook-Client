@@ -17,7 +17,7 @@ const AddRooms = () => {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:8000/room");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room`);
       if (!res.ok) {
         throw new Error("Failed to fetch rooms");
       }
@@ -55,7 +55,7 @@ const AddRooms = () => {
     roomData.ownerName = session.user.name || "";
 
     try {
-      const res = await fetch("http://localhost:8000/room", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ const AddRooms = () => {
   return (
     <div className="space-y-8 my-6">
       <div>
-        <h2 className="text-3xl font-bold mb-4 ml-8">Add Your New  Room</h2>
+        <h2 className="text-3xl font-bold mb-4 ml-8">Add Your New Room</h2>
         <form onSubmit={handleSUbmit} className="space-y-5 max-w-xl mx-auto">
           <input
             type="text"
@@ -154,7 +154,11 @@ const AddRooms = () => {
             </label>
 
             <label className="flex items-center gap-2">
-              <input type="checkbox" name="amenities" value="Air Conditioning" />
+              <input
+                type="checkbox"
+                name="amenities"
+                value="Air Conditioning"
+              />
               Air Conditioning
             </label>
           </div>
@@ -166,7 +170,9 @@ const AddRooms = () => {
             Submit
           </button>
 
-          {message && <p className="text-center text-sm text-green-700">{message}</p>}
+          {message && (
+            <p className="text-center text-sm text-green-700">{message}</p>
+          )}
         </form>
       </div>
 
@@ -189,7 +195,10 @@ const AddRooms = () => {
                 <p className="text-sm">Rate: ${room.hourlyRate || "N/A"}</p>
                 {room.amenities ? (
                   <p className="text-sm mt-2">
-                    Amenities: {Array.isArray(room.amenities) ? room.amenities.join(", ") : room.amenities}
+                    Amenities:{" "}
+                    {Array.isArray(room.amenities)
+                      ? room.amenities.join(", ")
+                      : room.amenities}
                   </p>
                 ) : null}
               </div>

@@ -20,7 +20,7 @@ const BookingPages = async ({ searchParams }) => {
   if (endTime) query.append("endTime", endTime);
 
   const res = await fetch(
-    `http://localhost:8000/booking?${query.toString()}`,
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/booking?${query.toString()}`,
     {
       cache: "no-store",
     }

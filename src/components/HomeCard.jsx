@@ -7,7 +7,6 @@ const HomeCard = ({ nook }) => {
   return (
     <div className="group my-8 relative overflow-hidden p-3 bg-white shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100">
 
-      {/* Image */}
       <div className="relative h-56 w-full overflow-hidden">
         <Image
           src={nook.roomImage}
@@ -17,19 +16,15 @@ const HomeCard = ({ nook }) => {
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
 
-        {/* overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
 
-        {/* price badge */}
         <div className="absolute top-3 right-3 bg-white/90 text-purple-600 text-sm font-semibold px-3 py-1 rounded-full shadow">
           ${nook.pricePerHour}/hr
         </div>
       </div>
 
-      {/* Content */}
       <div className="p-4">
 
-        {/* Room Name */}
         <Link
           href={`/booking/${nook._id}`}
           className="text-lg font-bold text-gray-800 hover:text-purple-600 transition"
@@ -37,13 +32,11 @@ const HomeCard = ({ nook }) => {
           {nook.roomName}
         </Link>
 
-        {/* location (optional if exists) */}
         <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
           <MapPin size={14} />
           <span>Study Room</span>
         </div>
 
-        {/* rating fake UI (optional) */}
         <div className="flex items-center gap-1 mt-2 text-purple-500 text-sm">
           <Star size={14} fill="currentColor" />
           <Star size={14} fill="currentColor" />
@@ -53,7 +46,6 @@ const HomeCard = ({ nook }) => {
           <span className="text-gray-500 ml-1">(4.0)</span>
         </div>
 
-        {/* CTA */}
         <Link
           href={`/booking/${nook._id}`}
           className="mt-4 inline-block w-full text-center bg-purple-600 text-white py-2 rounded-xl hover:bg-purple-700 transition"
